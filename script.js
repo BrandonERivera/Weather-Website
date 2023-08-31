@@ -2,13 +2,22 @@ var Currentcity = document.querySelector(".currentday-data")
 var searchbtnel = document.querySelector(".search");
 var forecast = document.querySelector(".futureday-data");
 var h4 = document.querySelector("h4")
+var historyEL = document.querySelector("#history-container")
 var apiKey = "cf54dde4a7df3e380b59cabd8dfa3ea7"
 var baseURL = "https://api.openweathermap.org/data/2.5/forecast?";
-var storedhistory = [];
 function search(){
-  var searchTerm = document.querySelector("#search-input").value
-  
+  var searchEL = document.querySelector("#search-input")
+  var searchTerm = searchEL.value
+  if(searchTerm != ""){
     var link = baseURL +"q=" + searchTerm + "&appid=" + apiKey + "&units=imperial";
+  }
+  else if(this.id != ""){
+    var link = this.id
+  }
+  else{
+    return;
+
+  }
     Currentcity.style.display ="block"
 
     fetch(link)
@@ -19,10 +28,9 @@ function search(){
         showcurrentweather(data)
         getForecast(data)
         Storelink(data, link)
+        displayHistory()
         Currentcity.style.display ="block"
-
-
-
+        searchEL.value = "";
     })
 }
 function getForecast(data){
@@ -58,9 +66,6 @@ function getForecast(data){
 
 
 }
- 
-
-
 function showcurrentweather(data){
   Currentcity.innerHTML= "";
   var name = data.city.name;
@@ -89,19 +94,51 @@ function showcurrentweather(data){
 }
  function Storelink(data, link){
   var name = data.city.name
-  console.log(name + link)
   var storedhistory = JSON.parse(localStorage.getItem("storedhistory")) || []
   var history = {
     name: name,
     link: link
   }
-  console.log(storedhistory)
-  console.log(history)
-
-  storedhistory.push(history)
-
+  if(storedhistory.length == 0)
+    {
+      storedhistory.push(history);
+      savesHistory(storedhistory);     
+    }
+    else
+    {
+      for( var i = 0; i < storedhistory.length; i++)
+     {
+        if(storedhistory[i].name == history.name)
+        { 
+         return;
+        }
+        else if( i == storedhistory.length-1 && storedhistory[i].name != history.name)
+        {
+          storedhistory.push(history);
+          savesHistory(storedhistory); 
+        }
+      }
+    }
+}
+function savesHistory(storedhistory){
   localStorage.setItem("storedhistory", JSON.stringify(storedhistory));
-
+}
+function displayHistory(){
+  historyEL.innerHTML = "";
+  var storedhistory = JSON.parse(localStorage.getItem("storedhistory"))
+  if(storedhistory.length > 5){
+    storedhistory.shift() 
+    savesHistory(storedhistory)
+  }
+  for(var i = 0; i < storedhistory.length; i++){
+    var historybutton = document.createElement("button")
+    historybutton.setAttribute("class", "btn btn-info my-2 btn-sml historybtn")
+    historybutton.setAttribute("id", storedhistory[i].link)
+    historybutton.textContent = storedhistory[i].name;
+    historyEL.append(historybutton);
+    historybutton.addEventListener("click",search)
+  }
 
 }
+displayHistory()
 searchbtnel.addEventListener("click", search)
