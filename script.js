@@ -1,11 +1,13 @@
 var Currentcity = document.querySelector(".currentday-data")
-var searchTerm = document.querySelector("#search-input");
-var searchbtnel = document.querySelector(".search")
+var searchbtnel = document.querySelector(".search");
 var apiKey = "cf54dde4a7df3e380b59cabd8dfa3ea7"
 var baseURL = "https://api.openweathermap.org/data/2.5/forecast?";
+var storedhistory = [];
 function search(){
-  console.log(searchTerm);
+  var searchTerm = document.querySelector("#search-input").value
+  
     var link = baseURL +"q=" + searchTerm + "&appid=" + apiKey + "&units=imperial";
+    Currentcity.style.display ="block"
 
     fetch(link)
     .then(function (response) {
@@ -13,21 +15,17 @@ function search(){
       return response.json();
     })
     .then(function (data){
-      
-      var citydays = []
+      console.log(data)
         var searchName = data.city.name;
         var searchLat = data.city.coord.lat;
         var searchLon = data.city.coord.lon;
-        var searchicon = data.list[0].weather[0].icon;
+        var searchicon = data.list[0].weather[0].description;
         var weatherDate = data.list[0].dt_txt.split(" ")[0];
         var datesplit = weatherDate.split("-")
         var dateformat = datesplit[1] + "/" + datesplit[2] + "/" + datesplit[0];
-        console.log(datesplit)
-        console.log(dateformat)
-        //var dateformat = datasplit[1] + "/" + datesplit[2] + "/" + datesplit[0];
         var searchTemp = data.list[0].main.temp + " °F";
         var searchWind = data.list[0].wind.speed + " MPH";
-        var searchHumid = data.list[0].main.humidity + " %"
+        var searchHumid = data.list[0].main.humidity + "%"
         var citydata = {
           name: searchName,
           date: dateformat,
@@ -38,8 +36,8 @@ function search(){
         }
 
         showcurrentweather(citydata)
-        console.log(data.list)
-        console.log(citydata)
+        Storelink(searchName, link)
+        Currentcity.style.display ="block"
 
 
 
@@ -60,6 +58,7 @@ function getForcast(lat , lon){
 
 }
 function showcurrentweather(data){
+  Currentcity.innerHTML= "";
   var name = data.name
   var date = data.date
   var icon = data.icon
@@ -81,6 +80,18 @@ function showcurrentweather(data){
   humidEL.textContent = "Humidity: " +humid;
   console.log(nameEL)
   Currentcity.append(nameEL, dateEL, iconEL, tempEL, windEL, humidEL);
+
+
+}
+function Storelink(data, data2){
+  var storedhistory = JSON.parse(localStorage.getItem("storedhistory"))
+  var history = {
+    name: data,
+    link: data2
+  }
+  console.log(history)
+  storedhistory.push(history);
+  localStorage.setItem("storedhistory", JSON.stringify(storedhistory));
 
 
 }
