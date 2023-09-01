@@ -145,7 +145,6 @@ function displayHistory(){
   if(storedhistory === null){
     return;
   }
-  console.log(storedhistory)
   if(storedhistory.length > 5){
     storedhistory.shift() 
     savesHistory(storedhistory)
