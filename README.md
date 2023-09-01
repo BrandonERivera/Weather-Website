@@ -26,9 +26,9 @@ THEN I am presented with a 5-day forecast that displays the date, an icon repres
 WHEN I click on a city in the search history
 THEN I am again presented with current and future conditions for that city
 ```
-
+This weather app allows the user to save up to 5 previous searches and displays the current days weather and future days weather. This app can be used as a guide to help understand how to use web api's
 
 ## Link
-
+https://brandonerivera.github.io/Weather-Website/
 ## Screenshots
 ![images](./images/WeatherWebsite.png)
