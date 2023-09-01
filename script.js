@@ -139,9 +139,12 @@ function savesHistory(storedhistory){
 function displayHistory(){
   //first empties out content
   historyEL.innerHTML = "";
-  var storedhistory = []
+  
   //gets local storage and checks the size if its 5 or bigger it removes the first one and puts in the new 5th one
   storedhistory = JSON.parse(localStorage.getItem("storedhistory"))
+  if(storedhistory === null){
+    return;
+  }
   console.log(storedhistory)
   if(storedhistory.length > 5){
     storedhistory.shift() 
