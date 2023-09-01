@@ -8,7 +8,7 @@ AS A traveler
 I WANT to see the weather outlook for multiple cities
 SO THAT I can plan a trip accordingly
 ```
-
+This weather website is to demonstrate the use of web api's and also futher shows the use of creatingelements within the javascript file rather then the html file
 ## Installations
 N/A
 
